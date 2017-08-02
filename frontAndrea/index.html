@@ -1,0 +1,136 @@
+﻿       
+<!DOCTYPE html>
+<html>                    
+  <head>                                  
+    <meta charset="utf-8">                                  
+    <meta name="format-detection" content="telephone=no">                                  
+    <meta name="msapplication-tap-highlight" content="no">                                  
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->                                        
+    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi">                                  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">                                  
+    <link href="http://asanchezb.com/GuardianApp/css/themes/2/bookit.min.css" rel="stylesheet">                                  
+    <link href="http://asanchezb.com/GuardianApp/css/themes/2/jquery.mobile.icons.min.css" rel="stylesheet">                                  
+    <link href="http://asanchezb.com/GuardianApp/lib/jqm/1.4.5/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet">                                  
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:thin">                                  
+    <link rel="stylesheet" type="text/css" href="css/app.css" />                
+<script type="text/javascript">
+        function autos() {
+            $.getJSON("lib/data.json", function(info) {
+                 $.each(info["cars"], function(key,value) {
+                    $("#marca").append('<option value="'+key+'">'+key+'</option>');
+				});
+            });
+        }
+    </script>                                              
+    <title>Prueba                                   
+    </title>                    
+  </head>                    
+  <body onload="autos();">                                            
+    <div data-role="page" id="page-index">                                                           
+      <!-- /header -->                                                                 
+      <div role="main" class="ui-content">            <h3>Registro</h3>                                                                           
+        <p>Ingresa tus datos                                                               
+        </p>                                                                           
+        <div id="ctn-err" class="bi-invisible">                                                              
+        </div>                                                                           
+        <label id="icon-label3">                                                                                             
+          <i class="fa fa-user-o"></i>                                                                                             
+          <input type="text" name="txt-first-name" id="txt-first-name" value="" placeholder="Nombre">                                                                           
+        </label>                                                                               
+        <label id="icon-label4">                                                                                             
+          <i class="fa fa-envelope-o"></i>                                                                                             
+          <input type="email" name="email" id="email" placeholder="Correo Electrónico" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{1,5}">                                                                           
+        </label>                                                                                 
+        <label id="icon-label8">                                                       
+          <select class="form-control" id="marca">            		                                                                                             
+            <option id="marcaAutoOpc" value="-1">Seleccione Marca Auto                                                                                           
+            </option>            	                                                                               
+          </select>                                                                           
+        </label>                                                                                            
+        <label id="icon-label5">                                                                                            
+          <select class="form-control" id="modelo">              	                                                                                             
+            <option value="-1">Seleccione modelo                                                                                           
+            </option>              	                                                                               
+          </select>                                                                           
+        </label>                                                                              
+        <label id="icon-label6">                                                                                          
+          <select class="form-control" id="year">            	                                                                                              
+            <option value="-1">Seleccione año                                                                                           
+            </option>            	                                                                               
+          </select>                                                                           
+        </label>                                                                                            
+        <button id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5" type="submit" onclick="validar()">Continuar                                                               
+        </button>                                                         
+      </div>            
+    </div>       
+    <div data-role="page" id="page-exito">         
+      <div role="main" class="ui-content"><h2>Registro Exitoso</h2>  Nombre:            
+        <label id="lnombre">        
+        </label>Email:             
+        <label id="lemail">        
+        </label>Marca:             
+        <label id="lmarca">        
+        </label>Modelo:            
+        <label id="lmodelo">        
+        </label>Año:               
+        <label id="lano">        
+        </label>         
+        <button id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5" type="submit" onclick="atras()">Volver Atras
+        </button>                                                                 
+      </div>    
+    </div>    
+<script src="js/jquery-2.1.1.min.js"></script>                
+<script src="js/signup-controller.js"></script>                
+<script type="text/javascript" src="js/index.js"></script>                
+<script src="js/jquery.mobile-1.4.5.min.js"></script>                
+<script>
+   $("#marca").change(function(){	
+		marca = $("#marca").val();
+     document.getElementById("modelo").selectedIndex = "-1";
+		 $.getJSON("lib/data.json", function(info) {
+                 $.each(info["cars"][marca]["models"], function(key,value) {
+                    $("#modelo").append('<option value="'+key+'">'+key+'</option>');
+                });
+            });
+		});
+    
+  $("#modelo").change(function(){	
+		modelo = $("#modelo").val();
+    document.getElementById("year").selectedIndex = "-1";
+		 $.getJSON("lib/data.json", function(info) {
+                 $.each(info["cars"][marca]["models"][modelo], function(key,value) {
+                    $("#year").append('<option value="'+value+'">'+value+'</option>');
+                });
+            });
+		});
+		$("#year").change(function(){	
+		$("#yearAuto").remove();
+		yearAuto = $("#year").val();
+		});
+    
+    function validar(){
+     nombre = $("#txt-first-name").val();
+     email  = $("#email").val();
+     marca  = $("#marca").val();
+     modelo = $("#modelo").val();
+     ano    = $("#year").val();
+     
+      if(nombre!="" && email!="" && marca!="-1" && modelo!="-1" && ano!="-1"){
+       $("#page-index").hide();
+       $("#page-exito").show();
+       $("#lnombre").text(nombre);  
+       $("#lemail").text(email);   
+       $("#lmarca").text(marca);   
+       $("#lmodelo").text(modelo);    
+       $("#lano").text(ano);    
+  		}else{
+        alert("Revise el formulario, datos incompletos");
+      }
+    }
+      function atras(){
+          $("#page-exito").hide();
+          $("#page-index").show();
+      }
+    </script>                                 
+  </body>
+</html>
